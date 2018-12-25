@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quizz_F-IntroViz</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script>
+(function($){
+    
+    // Creating a jQuery plugin:
+    
+    $.generateFile = function(options){
+        
+        options = options || {};
+        
+        if(!options.script || !options.filename || !options.content){
+            throw new Error("Please enter all the required config options!");
+        }
+        
+        // Creating a 1 by 1 px invisible iframe:
+        
+        var iframe = $('<iframe>',{
+            width:1,
+            height:1,
+            frameborder:0,
+            css:{
+                display:'none'
+            }
+        }).appendTo('body');
+
+        var formHTML = '<form action="" method="post">'+
+            '<input type="hidden" name="filename" />'+
+            '<input type="hidden" name="content" />'+
+            '</form>';
+        
+        // Giving IE a chance to build the DOM in
+        // the iframe with a short timeout:
+        
+        setTimeout(function(){
+        
+            // The body element of the iframe document:
+        
+            var body = (iframe.prop('contentDocument') !== undefined) ?
+                            iframe.prop('contentDocument').body :
+                            iframe.prop('document').body;   // IE
+            
+            body = $(body);
+            
+            // Adding the form to the body:
+            body.html(formHTML);
+            
+            var form = body.find('form');
+            
+            form.attr('action',options.script);
+            form.find('input[name=filename]').val(options.filename);
+            form.find('input[name=content]').val(options.content);
+            
+            // Submitting the form to download.php. This will
+            // cause the file download dialog box to appear.
+            
+            form.submit();
+        },50);
+    };
+    
+})(jQuery);
+</script>
+<script>
+$(document).ready(function(){
+    
+                  
+                  function ale(){
+                  au=''
+                  $(".p.end").each(function(){
+                                    if ($(this).attr("qi")=="Réussis"){
+                                    au+=$(this).find(".tt").text().replace(/&lt;/g, '<').replace(/&gt;/g, '>')+" --( "+$(this).attr("qi")+" )--"+"\n\n"
+                                    }else{
+                               au+=$(this).find(".tt").text().replace(/&lt;/g, '<').replace(/&gt;/g, '>')+" --( "+$(this).attr("qi")+" )--"
+                               au+="\n\n--(Ma reponse: \n"+$(this).find(".tp").val()+"\n\n--(La reponse:\n"
+                               au+=$(this).find(".tet").text().replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/<br>/g,'')
+                               au+="\n\n"
+                                    }
+                               })
+                  return au
+                  
+                  }
+    $('#download').click(function(e){
+                         
+$('.txt').html($('.name').html()+"\nGagner "+$(".count-done").html()+"\nPerdu "+$(".count-lose").html()+"\nTotal "+$(".count").html()+"\nMoyenne "+$(".count-moy").html()+"\nMoyenne(20) "+$(".count-done").html()*20/$(".count").html()+"/20"+"\nNb de Questions: "+$("#NB").text()+"\n\n"+ale())
+     //   $.generateFile({
+      //      filename    : $('.name').html()+"-test.txt",
+      //      content     : $('.txt').html(),
+       //     script      : 'download.php'
+        //});
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent($('.txt').text()));
+  element.setAttribute('download',"Resultat_"+($(".name").text())+'.txt');
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+
+        
+        e.preventDefault();
+    });
+        
+    
+    $('#downloadPage').click(function(e){
+
+        $.generateFile({
+            filename    : 'page.html',
+            content     : $('html').html(),
+            script      : 'index.php'
+        });
+        
+        e.preventDefault();
+    });
+    
+});
+</script>
+<script>
+(function(a){(jQuery.browser=jQuery.browser||{}).mobile=/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))})(navigator.userAgent||navigator.vendor||window.opera);
+</script>
+</head>
+
+<body>
+<style>
+.grey{
+background-color:grey;
+}
+</style>
+<script>
+$(function(){
+done="Réussis"
+lose="Perdu"
+moyen="Moyen"
+count=0
+count_done=0
+count_moyen=0
+count_lose=0
+moy=''
+if (jQuery.browser.mobile) {
+$(".sc").css({"position":"relative"});
+}
+
+$(".ll").click(function(){
+if ($(this).hasClass("hidd")){
+    $(this).parent().find(".hid").show()
+    $(this).removeClass("hidd")
+}else{
+$(this).addClass("hidd")
+$(this).parent().find(".hid").css({"display":"none"});
+
+}
+
+
+});
+
+function reload(){
+$(".count-done").html(count_done)
+$(".count-moyen").html(count_moyen)
+
+$(".count-lose").html(count_lose)
+$(".count").html(count)
+$(".count-moy").html(count_done+count_moyen+"/"+count)
+
+}
+function autre(l){
+
+if (l==done){
+return lose
+}else{
+return done
+}
+}
+$(".c").click(function(){
+papa=$(this).parent().parent()
+lolo=$(this).parent().parent().attr("qi")
+end=$(this).parent().parent().hasClass("end")
+us=$(this).attr("cl")
+qi=$(this).attr("qi")
+autrep=autre(qi)
+if (end){
+    if (lolo != qi){
+        if (qi==done){
+            count_done+=1
+if (lolo==lose){
+            count_lose-=1
+}else if(lolo==moyen){
+count_moyen-=0.5
+}
+
+        }else if(qi==lose){
+            count_lose+=1
+
+if (lolo==done){
+count_done-=1
+}else if(lolo==moyen){
+count_moyen-=0.5
+}
+        }else if(qi==moyen){
+        count_moyen+=0.5
+if (lolo==lose){
+count_lose-=1
+}else if(lolo==done){
+count_done-=1
+}
+        }
+        $(this).addClass("grey")
+
+        $("."+us+":not(."+qi+")").removeClass("grey")
+        papa.attr("qi",qi)
+
+    }else{
+        if (qi==done){
+            count_done-=1
+        }else if (qi==lose){
+            count_lose-=1
+}else if(qi==moyen){
+count_moyen-=0.5
+
+}
+        count-=1
+$(this).removeClass("grey")
+
+        papa.attr("qi","baba")
+        papa.removeClass("end")
+    }
+}else{
+    if (qi==done){
+        count_done+=1
+    }else if(qi==lose){
+        count_lose+=1
+}else if(qi==moyen){
+count_moyen+=0.5
+}
+    $(this).addClass("grey")
+    count+=1
+    papa.attr("qi",qi)
+    papa.addClass("end")
+
+}
+reload()
+});
+
+
+})
+function shuffle() {
+ var parent = $("#shuffle");
+    var divs = parent.children();
+    while (divs.length) {
+        elem=divs.splice(Math.floor(Math.random() * divs.length), 1)[0]
+        //$(elem).find(".nbb").text(+" ("+$(elem).find('.nbb').text()+")")
+        parent.append(elem);
+    }
+    $("#shuffle .xkli").each(function(i,ii){
+        console.log(i)
+        $(this).find(".nbb").text((i+1)+" (N° "+$(this).find('.nbb').attr('data-nb')+")")
+    });
+}
+</script>
+
+<div class="sc" style="position:fixed;right:0px;padding-right:40px;">
+<p class="name" style="text-align:center;font-size:30px">Quizz_F-IntroViz</p>
+<p> Réussis <span class="count-done">0</span></p>
+<p> Moyen <span class="count-moyen">0</span></p>
+<p> Perdu <span class="count-lose">0</span></p>
+<p> Total <span class="count">0</span></p>
+
+<p> Moyenne <span class="count-moy">0</span></p>
+<p id="NB" style="text-align:center;font-size:25px"></p>
+<form action="./" method="post">
+<textarea class="txt" style="display:none"></textarea>
+<a href="#" class="blueButton" id="download">Sauvegarder les resultats</a>
+<a href="#" onclick="javascript:shuffle()">shuffle</a>
+</form>
+</div>
+<div id="shuffle">
+
+
+    <div class="p0 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="1">n° 1</span>/  Qu'est ce la visualisation ? </b> <button cl="p0" qi="Réussis" class="c Réussis p0" type="button">RéUSSIS</button><button cl="p0" qi="Moyen" class="c Moyen p0" type="button">MOYEN</button><button class="c Perdu p0" cl="p0" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+l’analyse
+interprétation visuelle
+représentation graphique (sous forme visuel)
+l’exploration
+    </xmp></div></br><div class="p1 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="2">n° 2</span>/  champs de competence de la viz ? </b> <button cl="p1" qi="Réussis" class="c Réussis p1" type="button">RéUSSIS</button><button cl="p1" qi="Moyen" class="c Moyen p1" type="button">MOYEN</button><button class="c Perdu p1" cl="p1" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+traitement d’image -> etude d'image 2D (extraire, ou modif INFOS)
+l’infographie (créer des images de toute pièce)
+statistiques
+    </xmp></div></br><div class="p2 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="3">n° 3</span>/  Dans quelle buts Visualiser les données ? </b> <button cl="p2" qi="Réussis" class="c Réussis p2" type="button">RéUSSIS</button><button cl="p2" qi="Moyen" class="c Moyen p2" type="button">MOYEN</button><button class="c Perdu p2" cl="p2" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Pour mieux les comprendre et analyser les données
+afin d’aider notre compréhension du phénomène illustré
+    </xmp></div></br><div class="p3 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="4">n° 4</span>/  Motivations pour faire de la visu ? (dans le contexte actuelle) </b> <button cl="p3" qi="Réussis" class="c Réussis p3" type="button">RéUSSIS</button><button cl="p3" qi="Moyen" class="c Moyen p3" type="button">MOYEN</button><button class="c Perdu p3" cl="p3" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Augmentation de la puissance de calcul des ordinateurs
+Disponibilité des données
+Beaucoup de données à haute dimension
+Une composante complémentaire au techniques de classification
+    </xmp></div></br><div class="p4 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="5">n° 5</span>/  bonne technique de viz meme si? </b> <button cl="p4" qi="Réussis" class="c Réussis p4" type="button">RéUSSIS</button><button cl="p4" qi="Moyen" class="c Moyen p4" type="button">MOYEN</button><button class="c Perdu p4" cl="p4" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Une bonne technique de visualisation doit être
+applicable même si:
+• On a très peu de connaissance à priori sur les données ou pas du tout
+• Les buts exploratoires sont vagues
+• Les données sont non homogènes et bruitées
+    </xmp></div></br><div class="p5 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="6">n° 6</span>/  Resulat de la viz ? (forme général) </b> <button cl="p5" qi="Réussis" class="c Réussis p5" type="button">RéUSSIS</button><button cl="p5" qi="Moyen" class="c Moyen p5" type="button">MOYEN</button><button class="c Perdu p5" cl="p5" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Cartes
+Graphiques
+Tableaux de bord (« Dashboarding »)
+    </xmp></div></br><div class="p6 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="7">n° 7</span>/  Methodes de viz Univarié ? </b> <button cl="p6" qi="Réussis" class="c Réussis p6" type="button">RéUSSIS</button><button cl="p6" qi="Moyen" class="c Moyen p6" type="button">MOYEN</button><button class="c Perdu p6" cl="p6" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Représente des mesures d’une variable
+Caractérisent une distribution
+
+– Histogramme
+– Camambert (Pie chart)
+– Boîte à moustache
+
+    </xmp></div></br><div class="p7 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="8">n° 8</span>/  Methodes de viz Bivarié ? </b> <button cl="p7" qi="Réussis" class="c Réussis p7" type="button">RéUSSIS</button><button cl="p7" qi="Moyen" class="c Moyen p7" type="button">MOYEN</button><button class="c Perdu p7" cl="p7" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Etudie la liaison de deux variables
+de deux varible appariés
+de deux distrib conjontement
+
+– Scatter plot
+– Des graphiques linéaires
+    </xmp></div></br><div class="p8 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="9">n° 9</span>/  Methodes de viz Multivarié ? </b> <button cl="p8" qi="Réussis" class="c Réussis p8" type="button">RéUSSIS</button><button cl="p8" qi="Moyen" class="c Moyen p8" type="button">MOYEN</button><button class="c Perdu p8" cl="p8" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Etudier les liaisons entre plusieurs variables
+
+Méthodes à base d’icône
+– Méthodes à base de pixels
+– Système dynamique en coordonnées parallèles
+    </xmp></div></br><div class="p9 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="10">n° 10</span>/  Different type d'acuisition de donnée brutes ? </b> <button cl="p9" qi="Réussis" class="c Réussis p9" type="button">RéUSSIS</button><button cl="p9" qi="Moyen" class="c Moyen p9" type="button">MOYEN</button><button class="c Perdu p9" cl="p9" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+• par des simulations (calculs informatiques)
+• des enquêtes statistiques
+• des bases de données historiques
+• des capteurs de mesures réelles, etc.
+
+    </xmp></div></br><div class="p10 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="11">n° 11</span>/  Sources d'erreur de l'Acquisition des données </b> <button cl="p10" qi="Réussis" class="c Réussis p10" type="button">RéUSSIS</button><button cl="p10" qi="Moyen" class="c Moyen p10" type="button">MOYEN</button><button class="c Perdu p10" cl="p10" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Precision ? trop ou pas assez ?
+bruit ? incertitudes ? etc
+    </xmp></div></br><div class="p11 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="12">n° 12</span>/  Sources d'erreurs du Filtrage des données </b> <button cl="p11" qi="Réussis" class="c Réussis p11" type="button">RéUSSIS</button><button cl="p11" qi="Moyen" class="c Moyen p11" type="button">MOYEN</button><button class="c Perdu p11" cl="p11" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+attention a ne pas des données importantes et significatives
+representativité ?
+    </xmp></div></br><div class="p12 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="13">n° 13</span>/  Fleau de la dim Pb et solutions et implications </b> <button cl="p12" qi="Réussis" class="c Réussis p12" type="button">RéUSSIS</button><button cl="p12" qi="Moyen" class="c Moyen p12" type="button">MOYEN</button><button class="c Perdu p12" cl="p12" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+1961 par Bellman
+l’augmentation explosive du volume de données associée à l’ajout de dimensions supplémentaires dans un espace mathématique pour avoir une bonne densité , et ne pas faire de l'overfitting
+Une augmentation exponentielle du nombre d’exemples est nécessaire afin de maintenir une certaine densité de l’échantillon
+N^D  (N observations/case )
+solution -> rajouter des obs
+-> regularisation(lissage) de la fonction cible
+-> réduisant la dimension des données
+
+Pour N obs fixé, il existe un nombre maximal de variable au dela duquel la performance du model va empirer au lieu de s'ameliorer
+
+desertification de l'espace (sparse)
+decroissance du volume de la boule unité
+depeuplement du centre des hyper volumes
+
+augmentation exponentielle de la complexité de la fonction cible
+pour les grandes dimensions on a seulement la densité Gaussienne multivariée (simplifié)
+
+le manque de données nécessaire à l'apprentissage du modèle explose très vite lorsqu'on augmente la dimension des données en entrée
+
+c'est plutot un pb de complexité aussi
+    </xmp></div></br><div class="p13 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="14">n° 14</span>/  Classification des données à haute dimension - Techniques ? </b> <button cl="p13" qi="Réussis" class="c Réussis p13" type="button">RéUSSIS</button><button cl="p13" qi="Moyen" class="c Moyen p13" type="button">MOYEN</button><button class="c Perdu p13" cl="p13" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Méthodes :
+– Subspace-clustering: on cherche des clusters qui existent dans des sous-espaces de l’espace des données de départ
+CLIQUE,ProClus et des approches de co-clustering
+– Techniques de réduction de la dimension : Construire un espace de dimension beaucoup plus faible et chercher les clusters dans cette espace (on peut construire de nouvelles dimensions en combinant certaines dimensions dans les données d’origine)
+    </xmp></div></br><div class="p14 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="15">n° 15</span>/  Qu'est ce le Subspace-clustering ? les differentes methodes ? </b> <button cl="p14" qi="Réussis" class="c Réussis p14" type="button">RéUSSIS</button><button cl="p14" qi="Moyen" class="c Moyen p14" type="button">MOYEN</button><button class="c Perdu p14" cl="p14" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+
+* Méthodes de recherche des sous-espaces : on cherche des clusters qui existent dans des sous-espaces de l’espace des données de départ
+– Approches “Bottom-up”
+– Approches “Top-down”
+• Méthodes de clustering basées sur la corrélation
+– Par exemple : les approches à base de l’ACP
+• Méthodes de Co-clustering
+– Méthodes basées sur l’optimisation(ChengandChurch, ISMB’2000)
+– Méthodes d’énumération (Pei et al., ICDM’2003)
+    </xmp></div></br><div class="p15 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="16">n° 16</span>/  Differnetes approches des Méthodes de recherche des sous - espaces (Subspace-clustering) ? </b> <button cl="p15" qi="Réussis" class="c Réussis p15" type="button">RéUSSIS</button><button cl="p15" qi="Moyen" class="c Moyen p15" type="button">MOYEN</button><button class="c Perdu p15" cl="p15" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Approches “Bottom-up”
+– On commence par des petits sous-espaces et on cherche des sous-espaces plus grands seulement quand il peut y avoir des clusters dans des tels sous-espaces
+– Diverses techniques d’elagage pour reduire le nombre des sous-espaces plus grands qu’on cherche
+– Ex. CLIQUE (Agrawal et al. 1998)
+• Approches “Top-down”
+– On commence par l’espace de départ et on cherche des sous espaces plus
+petits d’une manière recursive
+– Le sous-espace d'un cluster peut être déterminée par le voisinage local
+– Ex. PROCLUS (Aggarwal et al. 1999): une approche semblable à k-medoid
+    </xmp></div></br><div class="p16 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="17">n° 17</span>/  Méthodes de clustering basées sur la corrélation (Subspace-clustering) ? </b> <button cl="p16" qi="Réussis" class="c Réussis p16" type="button">RéUSSIS</button><button cl="p16" qi="Moyen" class="c Moyen p16" type="button">MOYEN</button><button class="c Perdu p16" cl="p16" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Méthodes de clustering basées sur la corrélation :
+Des approches à base de modèles de corrélation avancés
+• Ex : approches à base d’ACP :
+– On applique l’ACP pour génerer un ensemble de nouvelles dimensions non-correlées
+– Ensuite on gère les clusters dans le nouvel espace ou ses sous-espaces
+    </xmp></div></br><div class="p17 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="18">n° 18</span>/  Co-CLustering (Subspace-clustering) ? </b> <button cl="p17" qi="Réussis" class="c Réussis p17" type="button">RéUSSIS</button><button cl="p17" qi="Moyen" class="c Moyen p17" type="button">MOYEN</button><button class="c Perdu p17" cl="p17" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Co-clustering : On classifie les objets et les attributs d’une manière simultanée (on traite les objets et les attributs symmetriquement)
+• Méthodes basées sur l’optimisation
+– On essaie de trouver une sous-matrice quand elle aquiert la meilleure signification en tant que bi-cluster
+– En raison du coût de calcul, une recherche de type « glouton » est utilisée pour trouver des bi-clusters locaux optimaux
+• Méthodes d’énumération
+– On utilise un seuil de tolerance pour specifier le degrée de bruit permis dans les co-clusters qu’on va traiter
+– Ensuite on essaye d’énumerer toutes les sous-matrices commes des bi-clusters qui satisfons les contraintes posées
+    </xmp></div></br><div class="p18 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="19">n° 19</span>/  Techniques de réduction de la dimension ? Quoi ? Differentes types ? Differents types de methodes ? </b> <button cl="p18" qi="Réussis" class="c Réussis p18" type="button">RéUSSIS</button><button cl="p18" qi="Moyen" class="c Moyen p18" type="button">MOYEN</button><button class="c Perdu p18" cl="p18" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Construire un espace de dimension beaucoup plus faible et chercher les clusters dans cette espace
+• Linéaires vs non-linéaires
+• Déterministes vs probabilistes
+• Supervisées vs non supervisées
+
+Sélection des variables (« feature selection ») : choisir un sous-ensemble de toutes les variables
+Extraction des variables (« feature extraction ») : créer un sous-ensemble de nouvelles variables par combinaison
+    </xmp></div></br><div class="p19 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="20">n° 20</span>/  Réduction des dimensions par Sélection de variables ? Quoi ? trois questions essentielles (et les réponses associées)? </b> <button cl="p19" qi="Réussis" class="c Réussis p19" type="button">RéUSSIS</button><button cl="p19" qi="Moyen" class="c Moyen p19" type="button">MOYEN</button><button class="c Perdu p19" cl="p19" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+La sélection de variables est un procédé permettant de choisir un sous-ensemble optimal de variables pertinentes, à partir d'un ensemble de variables, selon un certain critère de performance.
+Q1 : Comment mesurer la pertinence des variables ?
+critère d'évaluation J(X) permettant de quantifier l'importance d'une variable ou d'un ensemble de variables .
+Pour un problème de classement, on teste,  la qualité de discrimination du système en présence ou en absence d’une variable.
+Pour un problème de régression, on teste plutôt la qualité de prédiction par rapport aux autres variables.
+
+Q2 : Comment former le sous-ensemble optimal ?
+procédure de recherche ou de constitution du sous-ensemble optimal des variables pertinentes.
+Branch & Bound -> restreindre la recherche et donne le sous-ensemble optimal de variables, sous l'hypothèse de monotocité du critère de sélection J(X).
+X1  inclusDans X2 inclusDans K inclusDansXm  => J(X1) infEgual J(X2)i nfEgual K infEgual J(Xm)
+-->  Problème : la plupart des critères d'évaluation ne sont pas monotones
+méthodes sous-optimales :
+• Sequential Forward Selection (SFS)
+vide, ensuite on rajoute la variable qui optimise J(X)
+• Sequential Backward Selection (SBS)
+plein, on enleve la variable la moins importante selon  J(X)
+• Bidirectional Selection (BS)
+Effectue dans les deux sens -> s'arrete si une des methodes a trouvé le meilleur ens de variable avant d'atteindre le mileu  OU si les deux methodes ont attend le mileux
+Ens var trouvé par SFS et par SBS ne sont pas égaux car principes selection different
+Réduit le temps de recherche
+
+Q3 : Quel critère d'optimalité utiliser ?
+Critère d'arrêt de la recherche
+Permet d’arrêter la recherche lorsque aucune variable n’est plus suffisamment informative
+Calculer pour les différents sous-ensembles de variables sélectionnées une estimation de l’erreur de généralisation par validation croisée
+    </xmp></div></br><div class="p20 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="21">n° 21</span>/  Réduction des dimensions par extraction de caractéristiques ? (famille de methodes ?) </b> <button cl="p20" qi="Réussis" class="c Réussis p20" type="button">RéUSSIS</button><button cl="p20" qi="Moyen" class="c Moyen p20" type="button">MOYEN</button><button class="c Perdu p20" cl="p20" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Deux grandes familles de méthodes :
+Méthodes linéaires
+• Analyse en Composantes Principales (ACP)
+-> Recherche d’un espace H  permettant de rendre compte de la forme du nuage en minimisant les déformations de la projection (maximiser la variance)
+• Analyse Discriminante Linéaire (ADL)
+-> Trouve un espace à faible dimension optimal telle que, lorsque les points sont projetés, les données de différentes classes sont bien séparées (connaissance des labels des classes)
+• Multi-Dimensional Scaling (MDS)
+->Trouve une configuration des points dans un espace de faible dimensions dont les distances inter-points correspondent aux dissimilarités dans les grandes dimensions
+
+Méthodes non-linéaires
+• Isometric feature mapping (Isomap)
+-> Trouver une variété non-linéaire contenant les données (graphe reliant chaque point à ses k plus proches voisins)(MDS aux distances geodesiques obtenus)
+• Locally Linear Embedding (LLE)
+-> Construit une projection vers un espace linéaire de faible dimension préservant le voisinage (combinaison linéaire de ses plus proches voisins)
+• Kernel PCA
+?
+• Segmentation spectrale (spectral clustering)
+?
+• Methodes supervisées (S-Isomap)
+?
+    </xmp></div></br><div class="p21 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="22">n° 22</span>/  Qu'est ce la visualisation ? </b> <button cl="p21" qi="Réussis" class="c Réussis p21" type="button">RéUSSIS</button><button cl="p21" qi="Moyen" class="c Moyen p21" type="button">MOYEN</button><button class="c Perdu p21" cl="p21" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+l’analyse
+interprétation visuelle
+représentation graphique (sous forme visuel)
+l’exploration
+    </xmp></div></br><div class="p22 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="23">n° 23</span>/  champs de competence de la viz ? </b> <button cl="p22" qi="Réussis" class="c Réussis p22" type="button">RéUSSIS</button><button cl="p22" qi="Moyen" class="c Moyen p22" type="button">MOYEN</button><button class="c Perdu p22" cl="p22" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+traitement d’image -> etude d'image 2D (extraire, ou modif INFOS)
+l’infographie (créer des images de toute pièce)
+statistiques
+    </xmp></div></br><div class="p23 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="24">n° 24</span>/  Dans quelle buts Visualiser les données ? </b> <button cl="p23" qi="Réussis" class="c Réussis p23" type="button">RéUSSIS</button><button cl="p23" qi="Moyen" class="c Moyen p23" type="button">MOYEN</button><button class="c Perdu p23" cl="p23" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Pour mieux les comprendre et analyser les données
+afin d’aider notre compréhension du phénomène illustré
+    </xmp></div></br><div class="p24 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="25">n° 25</span>/  Motivations pour faire de la visu ? (dans le contexte actuelle) </b> <button cl="p24" qi="Réussis" class="c Réussis p24" type="button">RéUSSIS</button><button cl="p24" qi="Moyen" class="c Moyen p24" type="button">MOYEN</button><button class="c Perdu p24" cl="p24" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Augmentation de la puissance de calcul des ordinateurs
+Disponibilité des données
+Beaucoup de données à haute dimension
+Une composante complémentaire au techniques de classification
+    </xmp></div></br><div class="p25 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="26">n° 26</span>/  bonne technique de viz meme si? </b> <button cl="p25" qi="Réussis" class="c Réussis p25" type="button">RéUSSIS</button><button cl="p25" qi="Moyen" class="c Moyen p25" type="button">MOYEN</button><button class="c Perdu p25" cl="p25" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Une bonne technique de visualisation doit être
+applicable même si:
+• On a très peu de connaissance à priori sur les données ou pas du tout
+• Les buts exploratoires sont vagues
+• Les données sont non homogènes et bruitées
+    </xmp></div></br><div class="p26 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="27">n° 27</span>/  Resulat de la viz ? (forme général) </b> <button cl="p26" qi="Réussis" class="c Réussis p26" type="button">RéUSSIS</button><button cl="p26" qi="Moyen" class="c Moyen p26" type="button">MOYEN</button><button class="c Perdu p26" cl="p26" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Cartes
+Graphiques
+Tableaux de bord (« Dashboarding »)
+    </xmp></div></br><div class="p27 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="28">n° 28</span>/  Methodes de viz Univarié ? </b> <button cl="p27" qi="Réussis" class="c Réussis p27" type="button">RéUSSIS</button><button cl="p27" qi="Moyen" class="c Moyen p27" type="button">MOYEN</button><button class="c Perdu p27" cl="p27" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Représente des mesures d’une variable
+Caractérisent une distribution
+
+– Histogramme
+– Camambert (Pie chart)
+– Boîte à moustache
+
+    </xmp></div></br><div class="p28 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="29">n° 29</span>/  Methodes de viz Bivarié ? </b> <button cl="p28" qi="Réussis" class="c Réussis p28" type="button">RéUSSIS</button><button cl="p28" qi="Moyen" class="c Moyen p28" type="button">MOYEN</button><button class="c Perdu p28" cl="p28" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Etudie la liaison de deux variables
+de deux varible appariés
+de deux distrib conjontement
+
+– Scatter plot
+– Des graphiques linéaires
+    </xmp></div></br><div class="p29 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="30">n° 30</span>/  Methodes de viz Bivarié ? </b> <button cl="p29" qi="Réussis" class="c Réussis p29" type="button">RéUSSIS</button><button cl="p29" qi="Moyen" class="c Moyen p29" type="button">MOYEN</button><button class="c Perdu p29" cl="p29" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Etudier les liaisons entre plusieurs variables
+
+Méthodes à base d’icône
+– Méthodes à base de pixels
+– Système dynamique en coordonnées parallèles
+    </xmp></div></br><div class="p30 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="31">n° 31</span>/  Different type d'acuisition de donnée brutes ? </b> <button cl="p30" qi="Réussis" class="c Réussis p30" type="button">RéUSSIS</button><button cl="p30" qi="Moyen" class="c Moyen p30" type="button">MOYEN</button><button class="c Perdu p30" cl="p30" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+• par des simulations (calculs informatiques)
+• des enquêtes statistiques
+• des bases de données historiques
+• des capteurs de mesures réelles, etc.
+
+    </xmp></div></br><div class="p31 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="32">n° 32</span>/  Sources d'erreur de l'Acquisition des données </b> <button cl="p31" qi="Réussis" class="c Réussis p31" type="button">RéUSSIS</button><button cl="p31" qi="Moyen" class="c Moyen p31" type="button">MOYEN</button><button class="c Perdu p31" cl="p31" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Precision ? trop ou pas assez ?
+bruit ? incertitudes ? etc
+    </xmp></div></br><div class="p32 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="33">n° 33</span>/  Sources d'erreurs du Filtrage des données </b> <button cl="p32" qi="Réussis" class="c Réussis p32" type="button">RéUSSIS</button><button cl="p32" qi="Moyen" class="c Moyen p32" type="button">MOYEN</button><button class="c Perdu p32" cl="p32" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+attention a ne pas des données importantes et significatives
+representativité ?
+    </xmp></div></br><div class="p33 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="34">n° 34</span>/  Fleau de la dim Pb et solutions et implications </b> <button cl="p33" qi="Réussis" class="c Réussis p33" type="button">RéUSSIS</button><button cl="p33" qi="Moyen" class="c Moyen p33" type="button">MOYEN</button><button class="c Perdu p33" cl="p33" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+1961 par Bellman
+l’augmentation explosive du volume de données associée à l’ajout de dimensions supplémentaires dans un espace mathématique pour avoir une bonne densité , et ne pas faire de l'overfitting
+Une augmentation exponentielle du nombre d’exemples est nécessaire afin de maintenir une certaine densité de l’échantillon
+N^D  (N observations/case )
+solution -> rajouter des obs
+-> regularisation(lissage) de la fonction cible
+-> réduisant la dimension des données
+
+Pour N obs fixé, il existe un nombre maximal de variable au dela duquel la performance du model va empirer au lieu de s'ameliorer
+
+desertification de l'espace (sparse)
+decroissance du volume de la boule unité
+depeuplement du centre des hyper volumes
+
+augmentation exponentielle de la complexité de la fonction cible
+pour les grandes dimensions on a seulement la densité Gaussienne multivariée (simplifié)
+
+le manque de données nécessaire à l'apprentissage du modèle explose très vite lorsqu'on augmente la dimension des données en entrée
+
+c'est plutot un pb de complexité aussi
+    </xmp></div></br><div class="p34 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="35">n° 35</span>/  Classification des données à haute dimension - Techniques ? </b> <button cl="p34" qi="Réussis" class="c Réussis p34" type="button">RéUSSIS</button><button cl="p34" qi="Moyen" class="c Moyen p34" type="button">MOYEN</button><button class="c Perdu p34" cl="p34" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Méthodes :
+– Subspace-clustering: on cherche des clusters qui existent dans des sous-espaces de l’espace des données de départ
+CLIQUE,ProClus et des approches de co-clustering
+– Techniques de réduction de la dimension : Construire un espace de dimension beaucoup plus faible et chercher les clusters dans cette espace (on peut construire de nouvelles dimensions en combinant certaines dimensions dans les données d’origine)
+    </xmp></div></br><div class="p35 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="36">n° 36</span>/  Qu'est ce le Subspace-clustering ? les differentes methodes ? </b> <button cl="p35" qi="Réussis" class="c Réussis p35" type="button">RéUSSIS</button><button cl="p35" qi="Moyen" class="c Moyen p35" type="button">MOYEN</button><button class="c Perdu p35" cl="p35" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+
+* Méthodes de recherche des sous-espaces : on cherche des clusters qui existent dans des sous-espaces de l’espace des données de départ
+– Approches “Bottom-up”
+– Approches “Top-down”
+• Méthodes de clustering basées sur la corrélation
+– Par exemple : les approches à base de l’ACP
+• Méthodes de Co-clustering
+– Méthodes basées sur l’optimisation(ChengandChurch, ISMB’2000)
+– Méthodes d’énumération (Pei et al., ICDM’2003)
+    </xmp></div></br><div class="p36 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="37">n° 37</span>/  Differnetes approches des Méthodes de recherche des sous - espaces (Subspace-clustering) ? </b> <button cl="p36" qi="Réussis" class="c Réussis p36" type="button">RéUSSIS</button><button cl="p36" qi="Moyen" class="c Moyen p36" type="button">MOYEN</button><button class="c Perdu p36" cl="p36" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Approches “Bottom-up”
+– On commence par des petits sous-espaces et on cherche des sous-espaces plus grands seulement quand il peut y avoir des clusters dans des tels sous-espaces
+– Diverses techniques d’elagage pour reduire le nombre des sous-espaces plus grands qu’on cherche
+– Ex. CLIQUE (Agrawal et al. 1998)
+• Approches “Top-down”
+– On commence par l’espace de départ et on cherche des sous espaces plus
+petits d’une manière recursive
+– Le sous-espace d'un cluster peut être déterminée par le voisinage local
+– Ex. PROCLUS (Aggarwal et al. 1999): une approche semblable à k-medoid
+    </xmp></div></br><div class="p37 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="38">n° 38</span>/  Méthodes de clustering basées sur la corrélation (Subspace-clustering) ? </b> <button cl="p37" qi="Réussis" class="c Réussis p37" type="button">RéUSSIS</button><button cl="p37" qi="Moyen" class="c Moyen p37" type="button">MOYEN</button><button class="c Perdu p37" cl="p37" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Méthodes de clustering basées sur la corrélation :
+Des approches à base de modèles de corrélation avancés
+• Ex : approches à base d’ACP :
+– On applique l’ACP pour génerer un ensemble de nouvelles dimensions non-correlées
+– Ensuite on gère les clusters dans le nouvel espace ou ses sous-espaces
+    </xmp></div></br><div class="p38 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="39">n° 39</span>/  Co-CLustering (Subspace-clustering) ? </b> <button cl="p38" qi="Réussis" class="c Réussis p38" type="button">RéUSSIS</button><button cl="p38" qi="Moyen" class="c Moyen p38" type="button">MOYEN</button><button class="c Perdu p38" cl="p38" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Co-clustering : On classifie les objets et les attributs d’une manière simultanée (on traite les objets et les attributs symmetriquement)
+• Méthodes basées sur l’optimisation
+– On essaie de trouver une sous-matrice quand elle aquiert la meilleure signification en tant que bi-cluster
+– En raison du coût de calcul, une recherche de type « glouton » est utilisée pour trouver des bi-clusters locaux optimaux
+• Méthodes d’énumération
+– On utilise un seuil de tolerance pour specifier le degrée de bruit permis dans les co-clusters qu’on va traiter
+– Ensuite on essaye d’énumerer toutes les sous-matrices commes des bi-clusters qui satisfons les contraintes posées
+    </xmp></div></br><div class="p39 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="40">n° 40</span>/  Techniques de réduction de la dimension ? Quoi ? Differentes types ? Differents types de methodes ? </b> <button cl="p39" qi="Réussis" class="c Réussis p39" type="button">RéUSSIS</button><button cl="p39" qi="Moyen" class="c Moyen p39" type="button">MOYEN</button><button class="c Perdu p39" cl="p39" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Construire un espace de dimension beaucoup plus faible et chercher les clusters dans cette espace
+• Linéaires vs non-linéaires
+• Déterministes vs probabilistes
+• Supervisées vs non supervisées
+
+Sélection des variables (« feature selection ») : choisir un sous-ensemble de toutes les variables
+Extraction des variables (« feature extraction ») : créer un sous-ensemble de nouvelles variables par combinaison
+    </xmp></div></br><div class="p40 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="41">n° 41</span>/  Réduction des dimensions par Sélection de variables ? Quoi ? trois questions essentielles (et les réponses associées)? </b> <button cl="p40" qi="Réussis" class="c Réussis p40" type="button">RéUSSIS</button><button cl="p40" qi="Moyen" class="c Moyen p40" type="button">MOYEN</button><button class="c Perdu p40" cl="p40" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+La sélection de variables est un procédé permettant de choisir un sous-ensemble optimal de variables pertinentes, à partir d'un ensemble de variables, selon un certain critère de performance.
+Q1 : Comment mesurer la pertinence des variables ?
+critère d'évaluation J(X) permettant de quantifier l'importance d'une variable ou d'un ensemble de variables .
+Pour un problème de classement, on teste,  la qualité de discrimination du système en présence ou en absence d’une variable.
+Pour un problème de régression, on teste plutôt la qualité de prédiction par rapport aux autres variables.
+
+Q2 : Comment former le sous-ensemble optimal ?
+procédure de recherche ou de constitution du sous-ensemble optimal des variables pertinentes.
+Branch & Bound -> restreindre la recherche et donne le sous-ensemble optimal de variables, sous l'hypothèse de monotocité du critère de sélection J(X).
+X1  inclusDans X2 inclusDans K inclusDansXm  => J(X1) infEgual J(X2)i nfEgual K infEgual J(Xm)
+-->  Problème : la plupart des critères d'évaluation ne sont pas monotones
+méthodes sous-optimales :
+• Sequential Forward Selection (SFS)
+vide, ensuite on rajoute la variable qui optimise J(X)
+• Sequential Backward Selection (SBS)
+plein, on enleve la variable la moins importante selon  J(X)
+• Bidirectional Selection (BS)
+Effectue dans les deux sens -> s'arrete si une des methodes a trouvé le meilleur ens de variable avant d'atteindre le mileu  OU si les deux methodes ont attend le mileux
+Ens var trouvé par SFS et par SBS ne sont pas égaux car principes selection different
+Réduit le temps de recherche
+
+Q3 : Quel critère d'optimalité utiliser ?
+Critère d'arrêt de la recherche
+Permet d’arrêter la recherche lorsque aucune variable n’est plus suffisamment informative
+Calculer pour les différents sous-ensembles de variables sélectionnées une estimation de l’erreur de généralisation par validation croisée
+    </xmp></div></br><div class="p41 p xkli" qi="rien"><p><b class="tt"><span class='nbb' data-nb="42">n° 42</span>/  Réduction des dimensions par extraction de caractéristiques ? (famille de methodes ?) </b> <button cl="p41" qi="Réussis" class="c Réussis p41" type="button">RéUSSIS</button><button cl="p41" qi="Moyen" class="c Moyen p41" type="button">MOYEN</button><button class="c Perdu p41" cl="p41" qi="Perdu" type="button">PERDU</button></p><textarea style="border: 1px solid black;" rows="13" cols="50" class="tp"></textarea></br> <button class="ll hidd" type="button">afficher/cacher</button></b><xmp class="tet hid" style="display:none;white-space: pre-line;">
+Deux grandes familles de méthodes :
+Méthodes linéaires
+• Analyse en Composantes Principales (ACP)
+-> Recherche d’un espace H  permettant de rendre compte de la forme du nuage en minimisant les déformations de la projection (maximiser la variance)
+• Analyse Discriminante Linéaire (ADL)
+-> Trouve un espace à faible dimension optimal telle que, lorsque les points sont projetés, les données de différentes classes sont bien séparées (connaissance des labels des classes)
+• Multi-Dimensional Scaling (MDS)
+->Trouve une configuration des points dans un espace de faible dimensions dont les distances inter-points correspondent aux dissimilarités dans les grandes dimensions
+
+Méthodes non-linéaires
+• Isometric feature mapping (Isomap)
+-> Trouver une variété non-linéaire contenant les données (graphe reliant chaque point à ses k plus proches voisins)(MDS aux distances geodesiques obtenus)
+• Locally Linear Embedding (LLE)
+-> Construit une projection vers un espace linéaire de faible dimension préservant le voisinage (combinaison linéaire de ses plus proches voisins)
+• Kernel PCA
+?
+• Segmentation spectrale (spectral clustering)
+?
+• Methodes supervisées (S-Isomap)
+?
+</xmp>
+</div>
+</div>
+<script>
+document.getElementById("NB").innerHTML = "42 questions"
+</script>
+</body>
+
+</html>
